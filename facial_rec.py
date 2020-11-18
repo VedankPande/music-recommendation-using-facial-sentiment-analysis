@@ -8,8 +8,8 @@ KNOWN_NAMES = []
 UNKNOWN_FACES = []
 TOLERANCE = 0.6
 
-KNOWN_PATH = '/home/vedank/Desktop/data/face_data/known_faces'
-UNKNOWN_PATH = '/home/vedank/Desktop/data/face_data/unknown_faces'
+KNOWN_PATH = 'known_faces/'
+UNKNOWN_PATH = 'unknown_faces/'
 
 for name in os.listdir(KNOWN_PATH):
     for image_name in os.listdir(f"{KNOWN_PATH}/{name}"):
