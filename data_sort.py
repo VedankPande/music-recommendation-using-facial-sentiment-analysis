@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from PIL import Image
 
 # 0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral
 
@@ -17,7 +18,12 @@ for idx,image in enumerate(x_train):
     emote = labels[idx]
     emote_name = class_names[int(emote)]
     class_count[emote_name] += 1
-    # since np.save does not create a new directory automatically, you'll have to manually create folders for each class
-    np.save(f"{ROOT_PATH}/{class_names[int(emote)]}/{class_count[emote_name]}.npy",np.array(image))
+    
+    # saving in jpeg format so the pytorch dataloader.ImageFolder can read the files
+    im = Image.fromarray((image*255.0).astype(np.uint8))
+    im.save(f"{ROOT_PATH}/{class_names[int(emote)]}/{class_count[emote_name]}.jpeg")
+
+    #uncomment below if you want .npy files instead
+    #np.save(f"{ROOT_PATH}/{class_names[int(emote)]}/{class_count[emote_name]}.npy",np.array(image))
 
 print(class_count)
