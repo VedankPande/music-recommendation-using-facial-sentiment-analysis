@@ -40,9 +40,9 @@ def csv_to_np(input_data,ROOT_PATH):
 
 
 if __name__ == "__main__":
-    for x,y,z in [[x_train,y_train,"train"],[x_test,y_test,"test"]]:
+    for train,test,dataset_type in [[x_train,y_train,"train"],[x_test,y_test,"test"]]:
 
-        np_data = csv_to_np(x,ROOT)
-        y = np.array(y,dtype=np.uint8)
-        data_sort.numpy_to_jpeg_sorted(np_data,y,ROOT,z)
+        train = csv_to_np(train,ROOT)
+        test = np.array(test,dtype=np.uint8)
+        data_sort.numpy_to_jpeg_sorted(train,test,ROOT,dataset_type)
 
