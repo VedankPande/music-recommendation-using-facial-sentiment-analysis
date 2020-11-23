@@ -4,7 +4,7 @@ from PIL import Image
 # 0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral
 
 # takes numpy arrays and saves them in jpeg format, in class based folders
-def numpy_to_jpeg_sorted(train,labels,ROOT_PATH):
+def numpy_to_jpeg_sorted(train,labels,ROOT_PATH,train_or_test):
 
     class_names = ['Angry','Disgust','Fear','Happy','Sad','Surprise','Neutral']
     
@@ -17,7 +17,7 @@ def numpy_to_jpeg_sorted(train,labels,ROOT_PATH):
         
         # saving in jpeg format so the pytorch dataloader.ImageFolder can read the files
         im = Image.fromarray((image*255.0).astype(np.uint8))
-        im.save(f"{ROOT_PATH}/{class_names[int(emote)]}/{class_count[emote_name]}.jpeg")
+        im.save(f"{ROOT_PATH}/{train_or_test}/{class_names[int(emote)]}/{class_count[emote_name]}.jpeg")
 
         #uncomment below if you want .npy files instead
         #np.save(f"{ROOT_PATH}/{class_names[int(emote)]}/{class_count[emote_name]}.npy",np.array(image))

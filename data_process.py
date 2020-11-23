@@ -5,22 +5,28 @@ import torch
 import torchvision
 from PIL import Image
 import data_sort
+from sklearn.model_selection import train_test_split
 
-TRAIN_PATH = '/home/vedank/Desktop/code/facial_sentiment/dataset/train.csv'
-TEST_PATH = '/home/vedank/Desktop/code/facial_sentiment/dataset/test.csv'
+PATH = '/home/vedank/Desktop/code/facial_sentiment/dataset/icml_face_data.csv'
 ROOT = '/home/vedank/Desktop/code/facial_sentiment/data'
 
 # class names to name folders
 class_names = ['Angry','Disgust','Fear','Happy','Sad','Surprise','Neutral']
 
+#splitting data into train and test
+main_data = pd.read_csv(PATH)
+main_data.drop(columns=[' Usage'],inplace =True)
+main_x,main_y = main_data.iloc[:,1:],main_data.iloc[:,:1]
+x_train,x_test,y_train,y_test = train_test_split(main_x,main_y,test_size=0.25,random_state = 10)
+
+#save labels for future use
+np.save(f"{ROOT}/train/y_train.npy",np.array(y_train,dtype=np.uint8))
+np.save(f"{ROOT}/test/y_test.npy",np.array(y_test,dtype=np.uint8))
+
 #converts csv data to numpy arrays
-def csv_to_np(PATH,ROOT_PATH,dataset_type):
+def csv_to_np(input_data,ROOT_PATH):
     a = []
-    data = pd.read_csv(PATH)
-    if dataset_type == "train":
-        data,data_y = data.iloc[:,1:],data.iloc[:,:1]
-        np.save(f"{ROOT_PATH}/train_data_labels.npy",np.array(data_y))
-    data = pd.Series(np.array(data).flatten())
+    data = pd.Series(np.array(input_data).flatten())
     for i in range(len(data)):  
         img_str = data[i].split(' ')
         image = np.asarray(img_str,dtype=np.uint8).reshape(48,48,1)
@@ -34,7 +40,9 @@ def csv_to_np(PATH,ROOT_PATH,dataset_type):
 
 
 if __name__ == "__main__":
-    np_train = csv_to_np(TRAIN_PATH,ROOT,"train")
-    label = np.load(f"{ROOT}/train_data_labels.npy")
-    data_sort.numpy_to_jpeg_sorted(np_train,label,ROOT)
+    for x,y,z in [[x_train,y_train,"train"],[x_test,y_test,"test"]]:
+
+        np_data = csv_to_np(x,ROOT)
+        y = np.array(y,dtype=np.uint8)
+        data_sort.numpy_to_jpeg_sorted(np_data,y,ROOT,z)
 
